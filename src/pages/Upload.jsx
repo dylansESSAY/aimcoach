@@ -207,13 +207,12 @@ const parsed = {
   overall_summary: `Your scores show a clear gap between your stronger skills and weaker ones. The biggest areas to address this week are ${weakSkills[0]?.[0]?.replace(/_/g, ' ')} and ${weakSkills[1]?.[0]?.replace(/_/g, ' ')}. Stick to the routine every day and benchmark again on Sunday to measure real improvement.`,
 }
 
-      const { data: { count } } = await supabase
-        .from('benchmarks')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', session.user.id)
+      const { data: benchmarkData, error: countError } = await supabase
+  .from('benchmarks')
+  .select('id')
+  .eq('user_id', session.user.id)
 
-      const weekNumber = (count || 0) + 1
-
+const weekNumber = (benchmarkData?.length || 0) + 1
       const { data: benchmark } = await supabase
         .from('benchmarks')
         .insert({
