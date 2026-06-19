@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getRankBadge, getRankColor } from '../lib/ranks'
 
 const skills = [
   {
     name: 'Micro-adjustment',
     icon: '✛',
     rank: 'Bronze III',
-    rankColor: '#D85A30',
     pts: 580,
     prev: 360,
     delta: '+220',
@@ -25,7 +25,6 @@ const skills = [
     name: 'Click timing',
     icon: '🖱️',
     rank: 'Silver I',
-    rankColor: '#888780',
     pts: 620,
     prev: 590,
     delta: '+30',
@@ -44,7 +43,6 @@ const skills = [
     name: 'Flick overshoot control',
     icon: '🎯',
     rank: 'Silver III',
-    rankColor: '#D3D1C7',
     pts: 1140,
     prev: 980,
     delta: '+160',
@@ -63,7 +61,6 @@ const skills = [
     name: 'Strafe tracking',
     icon: '↔️',
     rank: 'Gold I',
-    rankColor: '#EF9F27',
     pts: 1310,
     prev: 1170,
     delta: '+140',
@@ -82,7 +79,6 @@ const skills = [
     name: 'Flicking',
     icon: '⚡',
     rank: 'Diamond I',
-    rankColor: '#5DCAA5',
     pts: 3080,
     prev: 2890,
     delta: '+190',
@@ -101,7 +97,6 @@ const skills = [
     name: 'Smooth tracking',
     icon: '〰️',
     rank: 'Gold III',
-    rankColor: '#EF9F27',
     pts: 1880,
     prev: 1670,
     delta: '+210',
@@ -120,7 +115,6 @@ const skills = [
     name: 'Reactive tracking',
     icon: '⚡',
     rank: 'Gold II',
-    rankColor: '#EF9F27',
     pts: 1620,
     prev: 1540,
     delta: '+80',
@@ -139,7 +133,6 @@ const skills = [
     name: 'Target switching',
     icon: '🔄',
     rank: 'Gold II',
-    rankColor: '#EF9F27',
     pts: 1560,
     prev: 1440,
     delta: '+120',
@@ -158,7 +151,6 @@ const skills = [
     name: 'Stopping accuracy',
     icon: '⏹️',
     rank: 'Gold III',
-    rankColor: '#EF9F27',
     pts: 1920,
     prev: 1830,
     delta: '+90',
@@ -177,7 +169,6 @@ const skills = [
     name: 'Crosshair placement',
     icon: '👁️',
     rank: 'Diamond I',
-    rankColor: '#5DCAA5',
     pts: 3010,
     prev: 2900,
     delta: '+110',
@@ -195,12 +186,13 @@ const skills = [
 ]
 
 const tiers = [
-  ['#D85A30', '#F0997B', 'Bronze', '0–599'],
-  ['#888780', '#D3D1C7', 'Silver', '600–1,199'],
-  ['#EF9F27', '#FAC775', 'Gold', '1,200–1,999'],
-  ['#378ADD', '#85B7EB', 'Platinum', '2,000–2,999'],
-  ['#1D9E75', '#5DCAA5', 'Diamond', '3,000–3,999'],
-  ['#7F77DD', '#AFA9EC', 'Elite', '4,000+'],
+  ['#D85A30', '#F0997B', 'Bronze', '0–29'],
+  ['#888780', '#D3D1C7', 'Silver', '30–59'],
+  ['#EF9F27', '#FAC775', 'Gold', '60–73'],
+  ['#378ADD', '#85B7EB', 'Platinum', '74–84'],
+  ['#1D9E75', '#5DCAA5', 'Diamond', '85–93'],
+  ['#7F77DD', '#AFA9EC', 'Elite', '94–98'],
+  ['#FF4ECD', '#FF9EE8', 'Mythic', '99–100'],
 ]
 
 function SkillRanks() {
@@ -224,51 +216,59 @@ function SkillRanks() {
     btn: { background: '#7F77DD', color: '#EEEDFE', border: 'none', borderRadius: '10px', padding: '13px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', width: '100%', fontFamily: 'inherit', marginTop: '8px' },
   }
 
+  const overallRank = 'Platinum II'
+  const overallBadge = getRankBadge(overallRank)
+  const overallColor = getRankColor(overallRank)
+
   return (
     <div style={s.page}>
 
       <div style={s.nav}>
         <div style={s.logo}>⊕ AimCoach</div>
         <span style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '20px', background: 'rgba(127,119,221,0.15)', border: '0.5px solid rgba(127,119,221,0.25)', color: '#AFA9EC' }}>Week 1 ranks</span>
-        <span style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '20px', background: 'rgba(29,158,117,0.15)', border: '0.5px solid rgba(29,158,117,0.25)', color: '#5DCAA5', marginLeft: '4px' }}>↑ Bronze I</span>
       </div>
 
       <div style={s.tag}>Skill rankings</div>
       <div style={s.title}>Your ranks — week 1</div>
       <div style={s.sub}>Every skill ranked independently · tap any skill to expand · overall rank is the average of all 10</div>
 
-      {/* Overall hero */}
+      {/* Overall hero with badge */}
       <div style={{ background: '#141416', border: '0.5px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '20px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(213,90,48,0.12)', border: '1.5px solid rgba(213,90,48,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '28px' }}>🥉</div>
+          <div style={{ width: '72px', height: '72px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {overallBadge
+              ? <img src={overallBadge} alt={overallRank} style={{ width: '72px', height: '72px', objectFit: 'contain' }} />
+              : <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: `${overallColor}22`, border: `1.5px solid ${overallColor}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px' }}>🏆</div>
+            }
+          </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '24px', fontWeight: '500' }}>Bronze I</div>
-            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginTop: '3px' }}>Overall — average of all 10 skill ranks · week 1</div>
+            <div style={{ fontSize: '24px', fontWeight: '500', color: overallColor }}>{overallRank}</div>
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginTop: '3px' }}>Overall — average of all 10 skill ranks</div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '28px', fontWeight: '500' }}>1,714</div>
+            <div style={{ fontSize: '28px', fontWeight: '500' }}>2,340</div>
             <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)' }}>overall score</div>
           </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '6px' }}>
-          <span>Bronze I · 1,714 pts</span>
-          <span>286 pts to Bronze II</span>
+          <span>{overallRank} · 2,340 pts</span>
+          <span>160 pts to Platinum III</span>
         </div>
         <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden', marginBottom: '12px' }}>
-          <div style={{ height: '100%', width: '43%', borderRadius: '3px', background: '#D85A30' }}></div>
+          <div style={{ height: '100%', width: '61%', borderRadius: '3px', background: overallColor }}></div>
         </div>
         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', lineHeight: '1.6', paddingTop: '12px', borderTop: '0.5px solid rgba(255,255,255,0.05)' }}>
-          Your two weakest skills — <span style={{ color: '#F09595' }}>micro-adjustment (Bronze III)</span> and <span style={{ color: '#F09595' }}>click timing (Silver I)</span> — are pulling your overall rank down. Fixing those will push your overall rank up fast.
+          Your two weakest skills are pulling your overall rank down. Fixing those will push your overall rank up fast.
         </div>
       </div>
 
       {/* Delta strip */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: '10px', marginBottom: '24px' }}>
         {[
-          ['Overall score', '1,714', 'rgba(255,255,255,0.3)', 'first benchmark'],
-          ['Skills in routine', '4', '#5DCAA5', 'being actively drilled'],
-          ['Skills solid', '6', '#5DCAA5', 'below 40% threshold'],
-          ['Rank ups', '—', 'rgba(255,255,255,0.3)', 'first week baseline'],
+          ['Overall score', '2,340', 'rgba(255,255,255,0.3)', 'this week'],
+          ['Skills in routine', '4', '#5DCAA5', 'being drilled'],
+          ['Skills solid', '6', '#5DCAA5', 'below threshold'],
+          ['Rank ups', '2', '#5DCAA5', 'this week'],
         ].map(([label, val, color, sub]) => (
           <div key={label} style={{ background: '#141416', border: '0.5px solid rgba(255,255,255,0.07)', borderRadius: '10px', padding: '11px 13px' }}>
             <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>{label}</div>
@@ -290,7 +290,7 @@ function SkillRanks() {
         ))}
       </div>
 
-      {/* Needs work label */}
+      {/* Needs work */}
       {(filter === 'all' || filter === 'weak') && (
         <div style={{ fontSize: '12px', fontWeight: '500', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           Needs work — in this week's routine
@@ -298,7 +298,6 @@ function SkillRanks() {
         </div>
       )}
 
-      {/* Skill cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
         {filtered.filter(sk => sk.type === 'weak').map(sk => (
           <SkillCard key={sk.name} sk={sk} expanded={expanded} toggleExpand={toggleExpand} />
@@ -318,16 +317,23 @@ function SkillRanks() {
         ))}
       </div>
 
-      {/* Rank key */}
+      {/* Rank key with badges */}
       <div style={s.tag}>Rank key</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,minmax(0,1fr))', gap: '6px', marginBottom: '24px' }}>
-        {tiers.map(([bg, color, name, range]) => (
-          <div key={name} style={{ background: '#141416', border: '0.5px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '10px 6px', textAlign: 'center' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: bg, margin: '0 auto 5px' }}></div>
-            <div style={{ fontSize: '11px', fontWeight: '500', color }}>{name}</div>
-            <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', marginTop: '2px' }}>{range}</div>
-          </div>
-        ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: '8px', marginBottom: '24px' }}>
+        {tiers.map(([bg, color, name, range]) => {
+          const badge = getRankBadge(`${name} I`) || getRankBadge(name)
+          return (
+            <div key={name} style={{ background: '#141416', border: '0.5px solid rgba(255,255,255,0.06)', borderRadius: '10px', padding: '12px 8px', textAlign: 'center' }}>
+              {badge
+                ? <img src={badge} alt={name} style={{ width: '36px', height: '36px', objectFit: 'contain', margin: '0 auto 6px', display: 'block' }} />
+                : <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: bg, margin: '0 auto 6px' }}></div>
+              }
+              <div style={{ fontSize: '12px', fontWeight: '500', color }}>{name}</div>
+              <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', marginTop: '2px' }}>{range}</div>
+              {name !== 'Mythic' && <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', marginTop: '1px' }}>I · II · III</div>}
+            </div>
+          )
+        })}
       </div>
 
       <button style={s.btn} onClick={() => navigate('/progress')}>
@@ -341,20 +347,30 @@ function SkillRanks() {
 function SkillCard({ sk, expanded, toggleExpand }) {
   const isOpen = expanded.includes(sk.name)
   const isWeak = sk.type === 'weak'
+  const badge = getRankBadge(sk.rank)
+  const rankColor = getRankColor(sk.rank)
 
   return (
     <div style={{
       background: '#141416',
-      borderRadius: '12px',
-      overflow: 'hidden',
-      borderLeft: isWeak ? `2px solid ${sk.barColor}44` : 'none',
+      borderLeft: isWeak ? `2px solid ${sk.barColor}66` : 'none',
       border: isWeak ? undefined : '0.5px solid rgba(255,255,255,0.07)',
       borderRadius: isWeak ? '0 12px 12px 0' : '12px',
+      overflow: 'hidden',
     }}>
-      <div onClick={() => toggleExpand(sk.name)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 16px', cursor: 'pointer' }}>
+      <div onClick={() => toggleExpand(sk.name)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', cursor: 'pointer' }}>
         <span style={{ fontSize: '15px', minWidth: '20px' }}>{sk.icon}</span>
         <span style={{ fontSize: '13px', fontWeight: '500', flex: 1 }}>{sk.name}</span>
-        <span style={{ fontSize: '13px', fontWeight: '500', color: sk.rankColor, minWidth: '80px', textAlign: 'right' }}>{sk.rank}</span>
+
+        {/* Rank badge */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {badge
+            ? <img src={badge} alt={sk.rank} style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+            : null
+          }
+          <span style={{ fontSize: '12px', fontWeight: '500', color: rankColor }}>{sk.rank}</span>
+        </div>
+
         <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', minWidth: '50px', textAlign: 'right' }}>{sk.pts.toLocaleString()} pts</span>
         <span style={{ fontSize: '11px', color: sk.deltaColor, minWidth: '36px', textAlign: 'right' }}>{sk.delta}</span>
       </div>
@@ -373,7 +389,7 @@ function SkillCard({ sk, expanded, toggleExpand }) {
         <div style={{ padding: '0 16px 14px', borderTop: '0.5px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
             {[
-              ['This week', `${sk.rank} · ${sk.pts.toLocaleString()}`, sk.rankColor],
+              ['This week', sk.rank, rankColor],
               ['Last week', `${sk.pts - parseInt(sk.delta)} pts`, 'rgba(255,255,255,0.5)'],
               ['Failure rate', sk.failRate, sk.failColor],
               ['Routine', sk.routine, 'rgba(255,255,255,0.5)'],
