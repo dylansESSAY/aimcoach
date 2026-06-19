@@ -1,45 +1,3 @@
-import bronze1 from '../assets/ranks/bronze-1.png'
-import bronze2 from '../assets/ranks/bronze-2.png'
-import bronze3 from '../assets/ranks/bronze-3.png'
-import silver1 from '../assets/ranks/silver-1.png'
-import silver2 from '../assets/ranks/silver-2.png'
-import silver3 from '../assets/ranks/silver-3.png'
-import gold1 from '../assets/ranks/gold-1.png'
-import gold2 from '../assets/ranks/gold-2.png'
-import gold3 from '../assets/ranks/gold-3.png'
-import platinum1 from '../assets/ranks/platinum-1.png'
-import platinum2 from '../assets/ranks/platinum-2.png'
-import platinum3 from '../assets/ranks/platinum-3.png'
-import diamond1 from '../assets/ranks/diamond-1.png'
-import diamond2 from '../assets/ranks/diamond-2.png'
-import diamond3 from '../assets/ranks/diamond-3.png'
-import elite1 from '../assets/ranks/elite-1.png'
-import elite2 from '../assets/ranks/elite-2.png'
-import elite3 from '../assets/ranks/elite-3.png'
-import mythic from '../assets/ranks/mythic.png'
-
-export const rankBadges = {
-  'Bronze I': bronze1,
-  'Bronze II': bronze2,
-  'Bronze III': bronze3,
-  'Silver I': silver1,
-  'Silver II': silver2,
-  'Silver III': silver3,
-  'Gold I': gold1,
-  'Gold II': gold2,
-  'Gold III': gold3,
-  'Platinum I': platinum1,
-  'Platinum II': platinum2,
-  'Platinum III': platinum3,
-  'Diamond I': diamond1,
-  'Diamond II': diamond2,
-  'Diamond III': diamond3,
-  'Elite I': elite1,
-  'Elite II': elite2,
-  'Elite III': elite3,
-  'Mythic': mythic,
-}
-
 export const rankColors = {
   Bronze: '#D85A30',
   Silver: '#888780',
@@ -72,11 +30,13 @@ export const rankThresholds = [
   { name: 'Mythic',       min: 99, max: 100 },
 ]
 
-export function getRankFromScore(score) {
-  for (let i = rankThresholds.length - 1; i >= 0; i--) {
-    if (score >= rankThresholds[i].min) return rankThresholds[i].name
-  }
-  return 'Bronze I'
+const badgeModules = import.meta.glob('../assets/ranks/*.png', { eager: true })
+
+export function getRankBadge(rankName) {
+  const key = rankName.toLowerCase().replace(' ', '-')
+  const path = `../assets/ranks/${key}.png`
+  const mod = badgeModules[path]
+  return mod ? mod.default : null
 }
 
 export function getRankColor(rankName) {
@@ -84,8 +44,11 @@ export function getRankColor(rankName) {
   return rankColors[tier] || '#888780'
 }
 
-export function getRankBadge(rankName) {
-  return rankBadges[rankName] || null
+export function getRankFromScore(score) {
+  for (let i = rankThresholds.length - 1; i >= 0; i--) {
+    if (score >= rankThresholds[i].min) return rankThresholds[i].name
+  }
+  return 'Bronze I'
 }
 
 export function getNextRank(rankName) {
